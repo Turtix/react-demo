@@ -4,6 +4,7 @@ import React,{Component} from "react";
 import withHoc from './01.hoc.jsx';
 
 // 受控组件
+@withHoc('登录')
 class Login extends Component {
     render () {
         const { username, password,composeChange,handleSubmit } = this.props;
@@ -22,4 +23,4 @@ class Login extends Component {
 
 //相当于 const newWithHoc = withHoc(Login)
 //       export default newWithHoc
-export default withHoc(Login)
+export default Login

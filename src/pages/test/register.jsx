@@ -2,7 +2,7 @@ import React,{Component} from "react";
 
 //引入高阶组件
 import withHoc from './01.hoc.jsx';
-
+@withHoc('注册')
 class Register extends Component {
 
     render () {
@@ -21,4 +21,4 @@ class Register extends Component {
     }
 }
 
-export default withHoc(Register)
+export default Register

@@ -2,8 +2,11 @@
 import  React,{Component} from 'react';
 
 // WrappedComponent 就是传入的包装组件
-export default function withHoc(WrappedComponent) {
-    return class extends Component {
+export default function withHoc(name) {
+    //给高阶组件传参数
+    return  (WrappedComponent)=> class extends Component {
+        //修改From 高阶组件的名字
+        static  displayName = `Form(${getDispalyName(WrappedComponent)})`;
         state = {
             username: '',
             password: '',
@@ -32,9 +35,16 @@ export default function withHoc(WrappedComponent) {
                 handleSubmit: this.handleSubmit
             }
             return (
-
-                <WrappedComponent {...mapMethodToProp} {...this.state}/>
+                <div>
+                    <h2>{name}</h2>
+                    <WrappedComponent {...mapMethodToProp} {...this.state}/>
+                </div>
             )
         }
     }
+}
+
+//修改From 高阶组件的名字
+function getDispalyName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
