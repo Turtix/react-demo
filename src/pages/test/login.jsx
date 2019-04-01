@@ -1,37 +1,18 @@
 import React,{Component} from "react";
-import { Form, Icon, Input, Button } from 'antd';
 
-import './index.less';
-
-const Item = Form.Item;
+//引入高阶组件
+import withHoc from './01.hoc.jsx';
 
 // 受控组件
 class Login extends Component {
-    state = {
-        username: '',
-        password: ''
-    }
-
-    // 高阶函数 --> 这样后面就能一直复用当前函数，而不用重新创建了~
-    composeChange = (name) => {
-        return (e) => this.setState({[name]: e.target.value});
-    }
-
-    // 统一所有提交表单函数名
-    login = (e) => {
-        e.preventDefault();
-        const { username, password, rePassword } = this.state;
-        alert(`用户名: ${username}, 密码: ${password}`);
-    }
-
     render () {
-        const { username, password } = this.state;
+        const { username, password,composeChange,handleSubmit } = this.props;
         return (
             <div>
                 <h2>登陆</h2>
-                <form onSubmit={this.login}>
-                    用户名: <input type="text" name="username" value={username} onChange={this.composeChange('username')}/> <br/>
-                    密码: <input type="password" name="password" value={password} onChange={this.composeChange('password')}/> <br/>
+                <form onSubmit={handleSubmit}>
+                    用户名: <input type="text" name="username" value={username} onChange={composeChange('username')}/> <br/>
+                    密码: <input type="password" name="password" value={password} onChange={composeChange('password')}/> <br/>
                     <input type="submit" value="登陆"/>
                 </form>
             </div>
@@ -39,3 +20,6 @@ class Login extends Component {
     }
 }
 
+//相当于 const newWithHoc = withHoc(Login)
+//       export default newWithHoc
+export default withHoc(Login)
