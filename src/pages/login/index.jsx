@@ -1,9 +1,10 @@
 import React,{Component} from "react";
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button ,message} from 'antd';
 
 import './index.less';
 
 import logo from './logo.png';
+import {reqLogin} from '../../api';
 
 const Item = Form.Item;
 
@@ -13,7 +14,7 @@ const Item = Form.Item;
         自定义表单校验
     */
     validator = (rule,value,callback)=>{
-        console.log(rule,value);
+        // console.log(rule,value);
         const length = value && value.length;
         const pwdReg = /^[a-zA-Z0-9_]+$/;
         if(!value){
@@ -30,6 +31,30 @@ const Item = Form.Item;
 
     handleSubmit = (e) => {
         e.preventDefault();
+        //校验表单是否通过
+        //表单校验的方法
+        this.props.form.validateFields(async (err,values)=>{
+            if(!err){
+                //表单校验成功
+                const {username,password} = values;
+                //登录结果
+                const  result = await reqLogin(username,password);
+                console.log(result)
+                //判断是否登录成功
+                if(result.status === 0){
+                    message.success('登录成功~');
+                    this.props.history.replace('/');
+                }else{
+                    //登录失败  提示失败信息
+                    message.error(result.msg);
+                }
+            }else{
+                //表单校验失败  提示错误信息
+                console.log('****** 表单校验失败 ******');
+                console.log(err);
+                console.log('****** 表单校验失败 ******');
+            }
+        })
     }
 
     render() {
@@ -44,7 +69,7 @@ const Item = Form.Item;
                     <h3>用户登录</h3>
                    <Form onSubmit={this.handleSubmit} className="login-form">
                        <Item>
-                           {getFieldDecorator('userName', {
+                           {getFieldDecorator('username', {
                                 //装饰器 表单校验
                                rules: [
                                    { required: true, whitespace: true, message: '必须输入用户名!' },

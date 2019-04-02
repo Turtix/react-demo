@@ -1,4 +1,4 @@
-const { override, fixBabelImports, addLessLoader,addBabelPlugins } = require('customize-cra');
+const { override, fixBabelImports, addLessLoader,addDecoratorsLegacy} = require('customize-cra');
 
 module.exports = override(
     fixBabelImports('import', {
@@ -10,12 +10,13 @@ module.exports = override(
         javascriptEnabled: true,
         modifyVars: { '@primary-color': '#1DA57A' },
     }),
-    addBabelPlugins(
+   /* addBabelPlugins(
         [
             "@babel/plugin-proposal-decorators",
             {
                 "legacy": true
             }
         ]
-    )
+    )*/
+    addDecoratorsLegacy()
 );
