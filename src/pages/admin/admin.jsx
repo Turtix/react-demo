@@ -23,7 +23,7 @@ export default  class  Admin  extends Component{
     constructor(props){
         super(props);
         this.state = {
-            collapsed: false,
+            collapsed: false
         };
 
         //判断用户是否登陆过
@@ -39,20 +39,23 @@ export default  class  Admin  extends Component{
 
     onCollapse = (collapsed) => {
         console.log(collapsed);
-        this.setState({ collapsed });
+        this.setState({ collapsed ,opacity: collapsed ? 0:1 });
+
     }
 
     render() {
+        const { collapsed } = this.state;
+        const opacity = collapsed ? 0:1;
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider
                     collapsible
-                    collapsed={this.state.collapsed}
+                    collapsed={collapsed}
                     onCollapse={this.onCollapse}
                 >
                     <Link to="/home" className="logo" >
                         <img src={logo} alt="logo" />
-                        <h1>后台管理</h1>
+                        <h1 style={{opacity}}>后台管理</h1>
                     </Link>
                     <LeftNav/>
                 </Sider>
