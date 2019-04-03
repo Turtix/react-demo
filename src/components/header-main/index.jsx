@@ -108,8 +108,6 @@ class  HeaderMain  extends Component{
             </div>
         )
     }
-
-
 }
 
 export default  HeaderMain;
