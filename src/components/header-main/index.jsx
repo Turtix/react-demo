@@ -58,10 +58,11 @@ class  HeaderMain  extends Component{
 
     render (){
         const {sysTime,weatherImg,weather} = this.state;
+        const {username} = memory.user;
         return (
             <div className="header-main">
                 <Row className="header-main-top">
-                    <span>欢迎xxx</span>
+                    <span>欢迎{username}</span>
                     <MyButton onClick={this.logout}>退出</MyButton>
                 </Row>
                 <Row className="header-main-bottom">
