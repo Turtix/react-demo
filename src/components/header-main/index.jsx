@@ -4,9 +4,11 @@ import {withRouter} from 'react-router-dom';
 import dayjs from 'dayjs';
 
 
+
 import MyButton from '../my-button';
 import {removeItem} from '../../pages/utils/storage-utils';
 import memory from '../../pages/utils/memory-utils';
+import {reqWeather} from '../../api';
 
 import './index.less';
 
@@ -36,15 +38,26 @@ class  HeaderMain  extends Component{
 
     //更新日期
     componentDidMount() {
+        //定时器动态设置时间
         this.interValId = setInterval(()=>{
             this.setState({
                 sysTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
             })
-        },1000)
+        },1000);
+
+        //请求天气数据  用jsonp请求解决跨域问题
+        reqWeather('深圳')
+            .then(res=>{
+                this.setState({
+                    weatherImg: res.weatherImg,
+                    weather: res.weather
+                })
+            })
+            .catch(err=>message.error(err,2))
     }
 
     render (){
-        const {sysTime} = this.state;
+        const {sysTime,weatherImg,weather} = this.state;
         return (
             <div className="header-main">
                 <Row className="header-main-top">
@@ -55,8 +68,8 @@ class  HeaderMain  extends Component{
                     <Col className="header-main-left" span={6}>用户管理</Col>
                     <Col className="header-main-right" span={18}>
                         <span>{sysTime}</span>
-                        <img src="http://api.map.baidu.com/images/weather/day/qing.png" alt="天气"/>
-                        <span>晴</span>
+                        <img src={weatherImg} alt="天气"/>
+                        <span>{weather}</span>
                     </Col>
                 </Row>
             </div>
