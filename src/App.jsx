@@ -13,13 +13,13 @@ import B from './pages/test/login';*/
 export default class App extends Component {
   render() {
     return (
-            <Switch>
-                {/*<A/>
-                <B/>*/}
-                <Route  path="/login" component={Login}/>
-                {/*<Redirect to="/login"/>*/}
-                <Route  path="/" component={Admin}/>
-            </Switch>
+    <Switch>
+        {/*<A/>
+        <B/>*/}
+        <Route  path="/login" component={Login}/>
+        {/*<Redirect to="/login"/>*/}
+        <Route  path="/" component={Admin}/>
+    </Switch>
     )
   }
 }
