@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {Link,Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import {Layout} from 'antd';
 
 import {getItem } from '../utils/storage-utils';
@@ -8,8 +8,6 @@ import LeftNav from '../../components/left-nav/left-nav.jsx';
 import Home from '../home';
 import Category from '../category';
 import Product from '../product';
-
-import logo from '../../assets/images/logo.png';
 
 import './admin.less';
 
@@ -53,11 +51,7 @@ export default  class  Admin  extends Component{
                     collapsed={collapsed}
                     onCollapse={this.onCollapse}
                 >
-                    <Link to="/home" className="logo" >
-                        <img src={logo} alt="logo" />
-                        <h1 style={{opacity}}>后台管理</h1>
-                    </Link>
-                    <LeftNav/>
+                    <LeftNav opacity={opacity}/>
                 </Sider>
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }} />

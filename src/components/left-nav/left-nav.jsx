@@ -1,10 +1,10 @@
-import React,{Component} from "react";
+import React,{Component,Fragment} from "react";
 import { Menu, Icon} from 'antd';
 
 import  {withRouter,Link} from 'react-router-dom';
-
+import menuList from '../../config/menu-config';
+import logo from "../../assets/images/logo.png";
 // import './left-nav.less';
-
 
 const SubMenu = Menu.SubMenu;
 const Item = Menu.Item;
@@ -13,49 +13,88 @@ const Item = Menu.Item;
 // withRouter作用：给非路由组件传递路由组件三个属性（history、location、match）
 @withRouter
  class  LeftNav  extends Component{
+    constructor(props){
+        super(props);
+        //创建菜单
+        const openKeys = [];
+        this.memus = this.createMenu(menuList,openKeys);
+
+        //初始化状态
+        this.state = {
+            openKeys
+        }
+    }
+
+    createItem(item){
+        return <Item key={item.key}>
+            <Link to={item.key}>
+                <Icon type={item.icon} />
+                <span>{item.title}</span>
+            </Link>
+        </Item>
+    }
+
+    /**
+     * 创建菜单的方法
+     * @param menuList
+     * @returns {*}
+     */
+    createMenu(menuList,openKeys){
+        // console.log(menuList)
+        //获取当前路径
+        const {pathname} = this.props.location;
+        return menuList.map((menu)=>{
+            const children = menu.children;
+            if (children){
+                //二级菜单
+                return  <SubMenu
+                    key={menu.key}
+                    title={<span><Icon type={menu.icon} /><span>商品</span></span>}
+                >
+                    {
+                        children.map((item)=>{
+                            if(pathname === item.key){
+                                openKeys.push(menu.key);
+                            }
+                           return this.createItem(item);
+                        })
+                    }
+                </SubMenu>
+            } else {
+                //一级菜单
+                return this.createItem(menu);
+            }
+        })
+    }
+
+    /**
+     * 点击显示二级菜单
+     */
+    handleOpenChange = (openKeys)=>{
+        //导航菜单 的onOpenChange事件是SubMenu 展开/关闭的回调	function(openKeys: string[])
+        this.setState({openKeys});
+    }
+    handleClick = ()=>{
+        // 收起所有的二级菜单
+        this.setState({openKeys: []});
+    }
     render (){
         //获取当前路径
-      const {pathname} = this.props.location;
+      const {location:{pathname},opacity} = this.props;
       return (
-       // 1.为了刷新页面,当前选中菜单不会跳转到默认设置 而是和路由保持一致
-       // 需要将defaultSelectedKeys的值改成[pathname] ,同样key值也要修改为对应的路径
-          //2.为了展开显示二级菜单sub1  添加defaultOpenKeys={['sub1']}
-      <Menu theme="dark" defaultSelectedKeys={[pathname]} mode="inline" defaultOpenKeys={['sub1']}>
-          <Item key="/home">
-              <Link to="/home">
-              <Icon type="home" />
-              <span>首页</span>
+          <Fragment>
+              <Link to="/home" className="logo" onClick={this.handleClick}>
+                  <img src={logo} alt="logo" />
+                  <h1 style={{opacity}}>后台管理</h1>
               </Link>
-          </Item>
-          <SubMenu
-              key="sub1"
-              title={<span><Icon type="appstore" /><span>商品</span></span>}
-          >
-              <Item key="/category">
-                  <Link to="/category">
-                    <Icon type="bars" />
-                    <span> 品类管理</span>
-                  </Link>
-              </Item>
-              <Item key="/product">
-                  <Link to="/product">
-                      <Icon type="tool" />
-                      <span> 商品管理</span>
-                  </Link>
-              </Item>
-          </SubMenu>
-          <SubMenu
-              key="sub2"
-              title={<span><Icon type="team" /><span>Team</span></span>}
-          >
-              <Item key="6">Team 1</Item>
-              <Item key="8">Team 2</Item>
-          </SubMenu>
-          <Item key="9">
-              <Icon type="file" />
-              <span>File</span>
-          </Item>
-      </Menu>
+
+              <Menu theme="dark" selectedKeys={[pathname]} mode="inline" openKeys={this.state.openKeys} onOpenChange={this.handleOpenChange}>
+                  {
+                      this.memus
+                  }
+              </Menu>
+          </Fragment>
+
       )
     }
 }
