@@ -9,6 +9,7 @@ import MyButton from '../my-button';
 import {removeItem} from '../../pages/utils/storage-utils';
 import memory from '../../pages/utils/memory-utils';
 import {reqWeather} from '../../api';
+import menuList from '../../config/menu-config';
 
 import './index.less';
 
@@ -53,12 +54,43 @@ class  HeaderMain  extends Component{
                     weather: res.weather
                 })
             })
-            .catch(err=>message.error(err,2))
+            .catch(err=>message.error(err,2));
+
     }
 
-    render (){
+    //清除定时器
+    componentWillUnmount() {
+        clearInterval(this.interValId);
+    }
+
+    /**
+     * 获取菜单标题
+     * @returns {*}
+     */
+    getTitle = ()=>{
+        //获取pathname
+        const { pathname } = this.props.location;
+        for(let i=0;i < menuList.length ;i++){
+            const menu =  menuList[i];
+            const children = menu.children;
+            if(children){
+                for(let j=0 ;j < children.length; j++){
+                    if(pathname === children[j].key){
+                        return  children[j].title;
+                    }
+                }
+            }else
+                if(pathname === menu.key){
+                    return menu.title;
+                }
+            }
+        }
+    render () {
         const {sysTime,weatherImg,weather} = this.state;
+        //获取用户名
         const {username} = memory.user;
+        //获取标题
+        const title = this.getTitle();
         return (
             <div className="header-main">
                 <Row className="header-main-top">
@@ -66,7 +98,7 @@ class  HeaderMain  extends Component{
                     <MyButton onClick={this.logout}>退出</MyButton>
                 </Row>
                 <Row className="header-main-bottom">
-                    <Col className="header-main-left" span={6}>用户管理</Col>
+                    <Col className="header-main-left" span={6}>{title}</Col>
                     <Col className="header-main-right" span={18}>
                         <span>{sysTime}</span>
                         <img src={weatherImg} alt="天气"/>
@@ -76,6 +108,8 @@ class  HeaderMain  extends Component{
             </div>
         )
     }
+
+
 }
 
-export default  HeaderMain
+export default  HeaderMain;
