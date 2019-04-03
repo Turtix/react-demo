@@ -2,13 +2,18 @@ import React,{Component} from "react";
 import {Route,Switch,Redirect} from 'react-router-dom';
 import {Layout} from 'antd';
 
-import {getItem } from '../utils/storage-utils';
-import memory from '../utils/memory-utils';
+import {getItem } from '../../utils/storage-utils';
+import memory from '../../utils/memory-utils';
 import LeftNav from '../../components/left-nav/left-nav.jsx';
 import Home from '../home';
 import Category from '../category';
 import Product from '../product';
 import HeaderMain from '../../components/header-main';
+import User from '../user';
+import Role from '../role';
+import Line from '../charts/line';
+import Bar from '../charts/bar';
+import Pie from '../charts/pie';
 
 import './admin.less';
 
@@ -64,6 +69,11 @@ export default  class  Admin  extends Component{
                                 <Route path="/home" component={Home}/>
                                 <Route path="/category" component={Category}/>
                                 <Route path="/product" component={Product}/>
+                                <Route path="/user" component={User}/>
+                                <Route path="/role" component={Role}/>
+                                <Route path="/charts/line" component={Line}/>
+                                <Route path="/charts/bar" component={Bar}/>
+                                <Route path="/charts/pie" component={Pie}/>
                                 <Redirect to="/home"/>
                             </Switch>
                         </div>

@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 
 
 import MyButton from '../my-button';
-import {removeItem} from '../../pages/utils/storage-utils';
-import memory from '../../pages/utils/memory-utils';
+import {removeItem} from '../../utils/storage-utils';
+import memory from '../../utils/memory-utils';
 import {reqWeather} from '../../api';
 import menuList from '../../config/menu-config';
 

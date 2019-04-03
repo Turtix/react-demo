@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button ,message} from 'antd';
 
 import logo from '../../assets/images/logo.png';
 import {reqLogin} from '../../api';
-import {setItem} from "../utils/storage-utils";
+import {setItem} from "../../utils/storage-utils";
 
 import './index.less';
 import '../../assets/images/logo.png';
