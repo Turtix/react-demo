@@ -3,7 +3,8 @@ import jsonp from 'jsonp';
 import  ajax from './ajax';
 
 //区分开发环境和生产环境
-const prefix = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://localhost:5000';
+// 或用:const prefix = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://localhost:5000';
+const prefix = process.env.NODE_ENV === 'development' ? '' : 'http://localhost:5000';
 
 //请求登录参数
 export  const reqLogin = (username,password)=>{
@@ -31,3 +32,8 @@ export  const reqWeather = (city)=>{
 
 //请求分类列表数据函数  ajax请求
 export const reqGetCategories = (parentId)=>ajax(prefix+ '/manage/category/list',{parentId})
+
+//请求添加分类
+export  const reqAddCategory = (parentId,categoryName)=>{
+    return ajax(prefix+ '/manage/category/add',{parentId,categoryName},'POST');
+}
