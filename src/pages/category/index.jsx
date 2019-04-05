@@ -197,6 +197,7 @@ export default  class  Category  extends Component{
                   onCancel={this.changeModal('isShowUpdateCategoryNameModal',false)}
                   okText="确认"
                   cancelText="取消"
+                  width={300}
               >
                   <UpdateCategoryNameForm categoryName={category.name} wrappedComponentRef={this.createUpdateForm}/>
               </Modal>
