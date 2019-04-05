@@ -76,15 +76,29 @@ export default  class  Category  extends Component{
         const { validateFields } = this.createAddForm.current.props.form;
         // console.log(this.createAddForm.current.props)
         //表单校验的方法
-        validateFields((err,values)=>{
-            console.log(err,values);
+        validateFields(async (err,values)=>{
             if(!err){
                 //校验成功
                 const  {parentId,categoryName} = values;
-                 this.setState({
-                    isShowAddCategoryModal: false
-                 })
-                reqAddCategory(parentId,categoryName);
+                const  result = await reqAddCategory(parentId,categoryName);
+                console.log(result)
+                if(result.status === 0){
+                    //成功添加品类 : 隐藏对话框  提示点击品类成功
+                    this.setState({
+                        isShowAddCategoryModal: false,
+                        /*
+                        在table中显示谈价的数据
+                        方式一: 重新请求所有数据,然后更新
+                        方式二: 将返回值插入到数据中进行更新.
+                        */
+                        categories:[...this.state.categories,result.data],
+                    })
+                    message.success('添加分类成功~');
+
+                }else{
+                    //添加数据失败
+                    message.error(result.msg);
+                }
             }else{
                 //校验失败  不做处理
             }
