@@ -39,6 +39,6 @@ export  const reqAddCategory = (parentId,categoryName)=>{
 }
 
 //请求更新品类名称
-export  const reqUpdateCategory = (parentId,categoryName)=>{
-    return ajax(prefix+ '/manage/category/update',{parentId,categoryName},'POST');
+export  const reqUpdateCategory = (categoryId,categoryName)=>{
+    return ajax(prefix+ '/manage/category/update',{categoryId,categoryName},'POST');
 }

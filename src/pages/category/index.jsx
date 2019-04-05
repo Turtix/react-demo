@@ -97,7 +97,7 @@ export default  class  Category  extends Component{
             if(!err){
                 //校验成功
                 const  {parentId,categoryName} = values;
-                const  result = await reqUpdateCategory(parentId,categoryName);
+                const  result = await reqAddCategory(parentId,categoryName);
                 // console.log(result)
                 if(result.status === 0){
                     //成功添加品类 : 隐藏对话框  提示点击品类成功
@@ -131,7 +131,7 @@ export default  class  Category  extends Component{
                     //校验成功
                 const  {categoryName} = values;
                 const {category:{_id},categories} = this.state;
-                const  result = await reqAddCategory(_id,categoryName);
+                const  result = await reqUpdateCategory(_id,categoryName);
                 if(result.status === 0){
                     //成功添加品类 : 隐藏对话框  提示点击品类成功
                     this.setState({
@@ -142,7 +142,7 @@ export default  class  Category  extends Component{
                             return category;
                         })
                     })
-                    message.success('添加分类成功~');
+                    message.success('修改分类名称成功~');
                     // 重置表单项
                     resetFields();
                 }else{
