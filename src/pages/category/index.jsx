@@ -124,7 +124,7 @@ export default  class  Category  extends Component{
 
     //修改分类方法
     updateCategoryName = ()=>{
-        const { validateFields } = this.createUpdateForm.current.props.form;
+        const { validateFields,resetFields  } = this.createUpdateForm.current.props.form;
 
         validateFields(async (err,values)=>{
             if(!err){
@@ -142,9 +142,9 @@ export default  class  Category  extends Component{
                             return category;
                         })
                     })
-
                     message.success('添加分类成功~');
-
+                    // 重置表单项
+                    resetFields();
                 }else{
                     //添加数据失败
                     message.error(result.msg);
