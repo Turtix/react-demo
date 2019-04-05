@@ -1,7 +1,7 @@
 
 
 import React,{Component} from "react";
-import {Form, Input} from "antd";
+import {Form, Input,Select} from "antd";
 
 import  PropTypes from 'prop-types';
 
@@ -45,12 +45,12 @@ const Item = Form.Item;
                          initialValue: '0'
                       }
                   )(
-                      <select >
+                      <Select >
                           <option key="0" value="0">一级分类</option>
                           {
                               categories.map((category)=><option key={category._id} value={category._id}>{category.name}</option>)
                           }
-                      </select>
+                      </Select>
                   )}
               </Item>
               <Item label="分类名称">
