@@ -28,6 +28,8 @@ export default  class  Category  extends Component{
         this.createUpdateForm = React.createRef();
     }
 
+    // 当请求数据为空时，不要loading.
+    isLoading = true;
 
     //定义表格列  columns为类的属性.
     columns = [{
@@ -65,17 +67,25 @@ export default  class  Category  extends Component{
        const  result = await reqGetCategories(parentId);
        // console.log(result);
        if(result.status === 0){
+           // 判断是一级/二级分类
+           const options = {};
+           if (result.data.length === 0) {
+               this.isLoading = false;
+               // 等当前更新完成后在调用，目的：让下一次生效
+               setTimeout(() => {
+                   this.isLoading = true;
+               }, 0)
+           }
+
            if(parentId === '0'){
                //一级分类
-               this.setState({
-                   categories: result.data
-               })
+               options.categories = result.data;
            }else{
                //二级分类
-               this.setState({
-                   subCategories: result.data
-               })
+               options. subCategories = result.data;
            }
+           //数据加载完成之后再更新状态.
+           this.setState(options);
        }else{
            message.error(result.msg);
        }
@@ -218,6 +228,7 @@ export default  class  Category  extends Component{
             isShowSubCategories,
             subCategories,
             parentCategory,
+            isLoading,
         } = this.state;
       return (
           <Card
@@ -237,7 +248,7 @@ export default  class  Category  extends Component{
                       showQuickJumper: true,
                   }}
                   //实现懒加载功能
-                  loading={isShowSubCategories ? !subCategories.length : !categories.length }
+                  loading={isShowSubCategories ? this.isLoading && !subCategories.length :this.isLoading && !categories.length }
               />
               <Modal
                   title="添加分类"
