@@ -12,7 +12,8 @@ const Item = Form.Item;
     constructor(props) {
         super(props);
         this.proptype = {
-            categories: PropTypes.array.isRequired
+            categories: PropTypes.array.isRequired,
+
         }
 
     }

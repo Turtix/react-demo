@@ -126,15 +126,25 @@ export default  class  Category  extends Component{
                 // console.log(result)
                 if(result.status === 0){
                     //成功添加品类 : 隐藏对话框  提示点击品类成功
-                    this.setState({
-                        isShowAddCategoryModal: false,
-                        /*
-                        在table中显示谈价的数据
-                        方式一: 重新请求所有数据,然后更新
-                        方式二: 将返回值插入到数据中进行更新.
-                        */
-                        categories:[...this.state.categories,result.data],
-                    })
+                    // 如果当前在一级分类，添加的是一级分类数据，要显示。添加的是二级分类数据，不显示
+                    // 如果当前在二级分类，添加的是一级分类数据，要插入原数据中，添加的是二级分类数据，并且与当前一级分类相同的，才显示
+                    if(parentId === '0'){
+                        this.setState({
+                            isShowAddCategoryModal: false,
+                            /*
+                            在table中显示谈价的数据
+                            方式一: 重新请求所有数据,然后更新
+                            方式二: 将返回值插入到数据中进行更新.
+                            */
+                            categories:[...this.state.categories,result.data],
+                        })
+                    }else if(parentId === this.state.parentCategory._id){
+                        this.setState({
+                            isShowAddCategoryModal: false,
+                            subCategories:[...this.state.subCategories,result.data],
+                        })
+                    }
+
                     message.success('添加分类成功~');
 
                 }else{
