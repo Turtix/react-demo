@@ -22,6 +22,7 @@ export default  class  Category  extends Component{
             isShowUpdateCategoryNameModal:false, //修改品类对话框显示
             isShowSubCategories:false, //是否展示二级分类数据
             category: {},  //保存要操作的一级分类数据
+            parentCategory:{}, //二级分类数据对应的一级分类
         }
         this.createAddForm = React.createRef();
         this.createUpdateForm = React.createRef();
@@ -40,7 +41,9 @@ export default  class  Category  extends Component{
             // console.log(category)  这样可以拿到每一个品类数据(一行)
             return <div>
             <MyButton onClick={this.showUpdateCategoryNameModal(category)}>修改名称</MyButton>
-            <MyButton onClick={this.showSubCategory(category)}>查看其子品类</MyButton>
+                {
+                    this.state.isShowSubCategories ? null: <MyButton onClick={this.showSubCategory(category)}>查看其子品类</MyButton>
+                }
         </div>},
     }];
 
@@ -50,7 +53,8 @@ export default  class  Category  extends Component{
             //切换显示
             this.setState({
                 category,
-                isShowSubCategories: true
+                isShowSubCategories: true,
+                parentCategory:category
             })
             //请求二级分类数据
             this.getCategories(category._id);
@@ -176,22 +180,32 @@ export default  class  Category  extends Component{
             }
         })
     }
+
+    //退回一级菜单列表
+    goBack = ()=>{
+        this.setState({
+            isShowSubCategories:false
+        })
+    }
     render (){
         const {
             categories,
             isShowAddCategoryModal,
             isShowUpdateCategoryNameModal ,
-            category
+            category,
+            isShowSubCategories,
+            subCategories,
+            parentCategory,
         } = this.state;
       return (
           <Card
               className="category"
-              title="一级分类列表"
+              title={isShowSubCategories?<div><MyButton onClick={this.goBack} style={{fontSize: 16}}>一级分类</MyButton><Icon type="arrow-right"/><span>{parentCategory.name}</span></div> : '一级分类列表'}
               extra={<Button type="primary" onClick={this.changeModal('isShowAddCategoryModal',true)}><Icon type="plus" />添加品类</Button>}
           >
               <Table
                   columns={this.columns}
-                  dataSource={categories}
+                  dataSource={ isShowSubCategories?subCategories : categories }
                   bordered
                   rowKey="_id"
                   pagination={{
