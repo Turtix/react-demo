@@ -48,16 +48,15 @@ export default  class  Category  extends Component{
     }];
 
     //查看二级菜单
-    showSubCategory = (category)=>{
+    showSubCategory = (parentCategory)=>{
         return ()=>{
             //切换显示
             this.setState({
-                category,
+                parentCategory,
                 isShowSubCategories: true,
-                parentCategory:category
             })
             //请求二级分类数据
-            this.getCategories(category._id);
+            this.getCategories(parentCategory._id);
         }
     }
 
@@ -156,13 +155,20 @@ export default  class  Category  extends Component{
             if(!err){
                     //校验成功
                 const  {categoryName} = values;
-                const {category:{_id},categories} = this.state;
+                const {category:{_id},isShowSubCategories} = this.state;
+
                 const  result = await reqUpdateCategory(_id,categoryName);
                 if(result.status === 0){
-                    //成功添加品类 : 隐藏对话框  提示点击品类成功
+                    //成功修改 : 隐藏对话框  提示修改成功
+                    // 如果在一级分类，点击修改一级分类数据
+                    // 如果在二级分类，点击修改二级分类数据
+                    let name = 'categories';
+                    if (isShowSubCategories) {
+                        name = 'subCategories'
+                    }
                     this.setState({
                         isShowUpdateCategoryNameModal: false,
-                        categories: categories.map((category) => {
+                        [name]: this.state[name].map((category) => {
                             //覆盖name
                             if (category._id === _id) return {...category, name: categoryName};
                             return category;
@@ -205,7 +211,7 @@ export default  class  Category  extends Component{
           >
               <Table
                   columns={this.columns}
-                  dataSource={ isShowSubCategories?subCategories : categories }
+                  dataSource={ isShowSubCategories ? subCategories : categories }
                   bordered
                   rowKey="_id"
                   pagination={{
