@@ -115,7 +115,7 @@ export default  class  Category  extends Component{
         // console.log(this.createAddForm.current);
 
         //经过 Form.create 包装的组件将会自带 this.props.form 属性，
-        const { validateFields } = this.createAddForm.current.props.form;
+        const { validateFields ,resetFields} = this.createAddForm.current.props.form;
         // console.log(this.createAddForm.current.props)
         //表单校验的方法
         validateFields(async (err,values)=>{
@@ -143,10 +143,16 @@ export default  class  Category  extends Component{
                             isShowAddCategoryModal: false,
                             subCategories:[...this.state.subCategories,result.data],
                         })
+                        console.log(this.state.isShowAddCategoryModal)
+                    }else{
+                        //防止在一级分类下添加二级目录,或在二级分类下添加一级目录,或在二级分类下添加不属于当前二级分类的二级目录,模态框不会自动隐藏.
+                        this.setState({
+                            isShowAddCategoryModal: false
+                        })
                     }
-
                     message.success('添加分类成功~');
-
+                    // 重置表单项
+                    resetFields();
                 }else{
                     //添加数据失败
                     message.error(result.msg);
@@ -230,6 +236,8 @@ export default  class  Category  extends Component{
                       defaultPageSize: 3,
                       showQuickJumper: true,
                   }}
+                  //实现懒加载功能
+                  loading={isShowSubCategories ? !subCategories.length : !categories.length }
               />
               <Modal
                   title="添加分类"

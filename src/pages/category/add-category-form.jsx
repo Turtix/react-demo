@@ -13,7 +13,6 @@ const Item = Form.Item;
         super(props);
         this.proptype = {
             categories: PropTypes.array.isRequired,
-
         }
 
     }
@@ -27,7 +26,7 @@ const Item = Form.Item;
         if(!value){
             callback("分类名称不能为空~");
         }else if(category){
-            callback("不能与之前的分类名称相同~");
+            callback("不能与之前的一级分类名称相同~");
         }else{
             callback();
         }
