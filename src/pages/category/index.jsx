@@ -17,8 +17,10 @@ export default  class  Category  extends Component{
         //初始化数据
         this.state = {
             categories:[], //菜单列表  一级分类数据
+            subCategories:[], //菜单列表  二级分类数据
             isShowAddCategoryModal: false, // 添加分类对话框显示
             isShowUpdateCategoryNameModal:false, //修改品类对话框显示
+            isShowSubCategories:false, //是否展示二级分类数据
             category: {},  //保存要操作的一级分类数据
         }
         this.createAddForm = React.createRef();
@@ -37,20 +39,40 @@ export default  class  Category  extends Component{
         render: category => {
             // console.log(category)  这样可以拿到每一个品类数据(一行)
             return <div>
-            <MyButton onClick = {this.showUpdateCategoryNameModal(category)}>修改名称</MyButton>
-            <MyButton>查看其子品类</MyButton>
+            <MyButton onClick={this.showUpdateCategoryNameModal(category)}>修改名称</MyButton>
+            <MyButton onClick={this.showSubCategory(category)}>查看其子品类</MyButton>
         </div>},
     }];
 
+    //查看二级菜单
+    showSubCategory = (category)=>{
+        return ()=>{
+            //切换显示
+            this.setState({
+                category,
+                isShowSubCategories: true
+            })
+            //请求二级分类数据
+            this.getCategories(category._id);
+        }
+    }
 
-    //获取菜单数据的方法  一级菜单
+    //获取菜单数据的方法  一级菜单  二级菜单
     getCategories = async (parentId) => {
        const  result = await reqGetCategories(parentId);
        // console.log(result);
        if(result.status === 0){
-            this.setState({
-                categories: result.data
-            })
+           if(parentId === '0'){
+               //一级分类
+               this.setState({
+                   categories: result.data
+               })
+           }else{
+               //二级分类
+               this.setState({
+                   subCategories: result.data
+               })
+           }
        }else{
            message.error(result.msg);
        }
@@ -199,7 +221,7 @@ export default  class  Category  extends Component{
                   cancelText="取消"
                   width={300}
               >
-                  <UpdateCategoryNameForm categoryName={category.name} wrappedComponentRef={this.createUpdateForm}/>
+                  <UpdateCategoryNameForm categories={categories} categoryName={category.name} wrappedComponentRef={this.createUpdateForm}/>
               </Modal>
           </Card>
       )

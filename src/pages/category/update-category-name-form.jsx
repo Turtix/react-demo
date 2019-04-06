@@ -9,7 +9,8 @@ const Item = Form.Item;
     constructor(props) {
         super(props);
         this.proptype = {
-            categoryName: PropTypes.string.isRequired
+            categoryName: PropTypes.string.isRequired,
+            categories: PropTypes.array.isRequired
         }
 
     }
@@ -17,12 +18,15 @@ const Item = Form.Item;
         自定义表单校验
     */
     validator = (rule,value,callback)=>{
-        const { categoryName } = this.props;
+        const { categoryName,categories } = this.props;
+        const  category = categories.find((category)=>category.name === value);
         if (!value) {
             callback('请输入要修改的分类名称，不能为空');
         } else if (value === categoryName) {
             callback('不能与修改前分类名称相同');
-        } else {
+        } else if(category){
+            callback("该分类名称已存在~");
+        }else {
             callback();
         }
     }
