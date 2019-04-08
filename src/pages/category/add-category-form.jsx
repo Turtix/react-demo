@@ -6,7 +6,7 @@ import {Form, Input,Select} from "antd";
 import  PropTypes from 'prop-types';
 
 const Item = Form.Item;
-
+const Option = Select.Option;
 @Form.create()
  class  AddCategoryForm  extends Component{
     constructor(props) {
@@ -46,9 +46,9 @@ const Item = Form.Item;
                       }
                   )(
                       <Select >
-                          <option key="0" value="0">一级分类</option>
+                          <Option key="0" value="0">一级分类</Option>
                           {
-                              categories.map((category)=><option key={category._id} value={category._id}>{category.name}</option>)
+                              categories.map((category)=><Option key={category._id} value={category._id}>{category.name}</Option>)
                           }
                       </Select>
                   )}

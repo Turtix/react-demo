@@ -9,8 +9,6 @@ import UpdateCategoryNameForm from './update-category-name-form';
 
 import './index.less';
 
-
-
 export default  class  Category  extends Component{
     constructor(props){
         super(props);
@@ -98,9 +96,17 @@ export default  class  Category  extends Component{
 
     // 切换对话框显示/隐藏的方法
     changeModal = (name,isShow)=>{
-        // console.log(66666);
         //传参时需要在外面包裹一层  否则在传参的同时会直接调用函数.
         return ()=>{
+            //当修改数据后 没点击取消和确定按钮就直接关闭对话框 后需要清空表单数据  防止下次点击修改,还会显示上次的数据
+            if(name === 'isShowUpdateCategoryNameModal' && isShow === false){
+                this.createUpdateForm.current.props.form.resetFields();
+            }
+            //添加数据同理
+            if(name === 'isShowAddCategoryModal' && isShow === false){
+                this.createAddForm.current.props.form.resetFields();
+            }
+
             this.setState({
                 [name]: isShow
             })
