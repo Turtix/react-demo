@@ -82,7 +82,7 @@ export default  class  Category  extends Component{
                options.categories = result.data;
            }else{
                //二级分类
-               options. subCategories = result.data;
+               options.subCategories = result.data;
            }
            //数据加载完成之后再更新状态.
            this.setState(options);
@@ -138,28 +138,18 @@ export default  class  Category  extends Component{
                     //成功添加品类 : 隐藏对话框  提示点击品类成功
                     // 如果当前在一级分类，添加的是一级分类数据，要显示。添加的是二级分类数据，不显示
                     // 如果当前在二级分类，添加的是一级分类数据，要插入原数据中，添加的是二级分类数据，并且与当前一级分类相同的，才显示
+                    const options = { isShowAddCategoryModal: false,};
                     if(parentId === '0'){
-                        this.setState({
-                            isShowAddCategoryModal: false,
                             /*
                             在table中显示谈价的数据
                             方式一: 重新请求所有数据,然后更新
                             方式二: 将返回值插入到数据中进行更新.
                             */
-                            categories:[...this.state.categories,result.data],
-                        })
+                        options.categories = [...this.state.categories,result.data];
                     }else if(parentId === this.state.parentCategory._id){
-                        this.setState({
-                            isShowAddCategoryModal: false,
-                            subCategories:[...this.state.subCategories,result.data],
-                        })
-                        console.log(this.state.isShowAddCategoryModal)
-                    }else{
-                        //防止在一级分类下添加二级目录,或在二级分类下添加一级目录,或在二级分类下添加不属于当前二级分类的二级目录,模态框不会自动隐藏.
-                        this.setState({
-                            isShowAddCategoryModal: false
-                        })
+                        options.subCategories = [...this.state.subCategories,result.data];
                     }
+                    this.setState(options);
                     message.success('添加分类成功~');
                     // 重置表单项
                     resetFields();
@@ -228,7 +218,6 @@ export default  class  Category  extends Component{
             isShowSubCategories,
             subCategories,
             parentCategory,
-            isLoading,
         } = this.state;
       return (
           <Card
