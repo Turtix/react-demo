@@ -1,13 +1,16 @@
 import React,{Component,Fragment} from "react";
+import { Link } from 'react-router-dom';
 
 import {Button, Card, Icon, Table, Select, Input, Modal} from "antd";
 
 import MyButton from '../../components/my-button';
 import { reqGetProducts } from  '../../api';
 
+import './index.less';
+
 const Option = Select.Option;
 
-export default  class  Product  extends Component{
+export default  class  Index  extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -74,11 +77,12 @@ export default  class  Product  extends Component{
                             <Option key={0} value={0}>根据商品名称</Option>
                             <Option key={1} value={1}>根据商品描述</Option>
                         </Select>
-                        <Input placeholder="关键字" style={{width:200,margin:'0 10px'}}/>
-                        <Button type="primary">搜索</Button>
+                        <Input placeholder="关键字" className="search-input" />
+                        <Button type="primary" >搜索</Button>
                     </Fragment>
                 }
-                extra={<Button type="primary" ><Icon type="plus" />添加品类</Button>}
+                extra={<Link to="/product/saveupdate"><Button type="primary" ><Icon type="plus" />添加品类</Button></Link>}
+                className="product"
             >
                 <Table
                     columns={this.columns}
