@@ -23,7 +23,7 @@ export default  class  SaveUpdate  extends Component{
 
     //级联选择器change事件
     onChange = (value)=>{
-        console.log(value)
+        // console.log(value)
     }
 
     //提交表单
@@ -63,12 +63,30 @@ export default  class  SaveUpdate  extends Component{
                     options: result.data.map((item)=>{
                         return {
                             value: item._id,
-                            label:item.name
+                            label:item.name,
+                            isLeaf: false,       //实现懒加载
                         }
                     })
                 })
             }else{
-
+                const  { options } = this.state;
+                this.setState({
+                    options: options.map((item)=>{
+                        if(item.value === parentId){
+                            //说明找到了要修改的分类
+                            item.children = result.data.map((item)=>{
+                                return {
+                                    value: item._id,
+                                    label:item.name,
+                                    //isLeaf: false,       //二级目录不能实现懒加载
+                                }
+                            });
+                            item.loading = false;    //请求回来  取消loading状态.
+                            item.isLeaf = true;      //请求回来  取消loading状态.
+                        }
+                        return  item;
+                    })
+                })
             }
         }else{
             message.error(result.msg);
@@ -79,6 +97,30 @@ export default  class  SaveUpdate  extends Component{
     componentDidMount() {
         this.getCategories('0');
     }
+
+    //加载二级分类数据
+    loadData = (selectedOptions) => {
+        //传入options数组,并拿到数组的最后一项,selectedOptions拿到的是一个数组,targetOption是数组里面的最后一个对象.
+        const targetOption = selectedOptions[selectedOptions.length - 1];
+
+        //显示loading状态
+        targetOption.loading = true;
+
+        console.log(selectedOptions)
+        console.log(targetOption)    //{value: "5ca562f4718ec41748232bfd", label: "电脑", isLeaf: false}
+
+        //点击一级菜单  加载二级分类数据
+        this.getCategories(targetOption.value);
+
+        // 模拟异步请求 懒加载 options
+        setTimeout(() => {
+            //请求成功去掉loading状态.
+           /* targetOption.loading = false;
+            targetOption.isLeaf = true;*/
+
+        }, 1000);
+    }
+
 
     render (){
         const {options} = this.state;
@@ -105,6 +147,8 @@ export default  class  SaveUpdate  extends Component{
                           options={options}
                           onChange={this.onChange}
                           placeholder="请选择分类"
+                          loadData={this.loadData}    //加载数据
+                          changeOnSelect       //当此项为 true 时，点选每级菜单选项值都会发生变化
                       />
                   </Item>
                   <Item
