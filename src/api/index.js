@@ -31,14 +31,18 @@ export  const reqWeather = (city)=>{
 }
 
 //请求分类列表数据函数  ajax请求
-export const reqGetCategories = (parentId)=>ajax(prefix+ '/manage/category/list',{parentId})
+export const reqGetCategories = (parentId)=>ajax(prefix+ '/manage/category/list',{parentId});
 
-//请求添加分类
+//请求添加分类函数
 export  const reqAddCategory = (parentId,categoryName)=>{
     return ajax(prefix+ '/manage/category/add',{parentId,categoryName},'POST');
 }
 
-//请求更新品类名称
+//请求更新品类名称函数
 export  const reqUpdateCategory = (categoryId,categoryName)=>{
     return ajax(prefix+ '/manage/category/update',{categoryId,categoryName},'POST');
 }
+
+//请求获取产品分页列表函数
+export const reqGetProducts = (pageNum,pageSize)=>ajax(prefix+ '/manage/product/list',{pageNum,pageSize});
+
