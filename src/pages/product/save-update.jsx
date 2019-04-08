@@ -1,13 +1,21 @@
 import React,{Component} from "react";
-import { Card ,Icon, Form, Input, Button, Cascader,InputNumber} from 'antd';
+import { Card ,Icon, Form, Input, Button, Cascader,InputNumber,message} from 'antd';
 
 import RichTextEditor from './rich-text-editor';
+import { reqGetCategories } from '../../api';
 
 import './save-update.less';
 const  Item = Form.Item;
 
 
 export default  class  SaveUpdate  extends Component{
+    constructor(props) {
+        super(props);
+        this.state={
+            options:[],  //级联列表的数据
+        }
+    }
+
     //点击箭头 退出添加品类  回退到上一级路由
     goBack = ()=>{
         this.props.history.goBack();
@@ -36,25 +44,44 @@ export default  class  SaveUpdate  extends Component{
         },
     };
 
+    //请求分类数据
+    getCategories = async (parentId)=>{
+        const  result =await reqGetCategories(parentId);
+        if(result.status === 0){
+            if(parentId === '0'){
+                this.setState({
+                /* 生成options格式如下
+                const options = [
+                    {
+                    value: 'zhejiang',    //实际是通过value查找的name,value即为一级菜单数据的_id
+                    label: 'Zhejiang',   //表单中显示的结果name
+                    children: [{
+                        value: 'hangzhou',
+                        label: 'Hangzhou',
+                    }],
+                }];*/
+                    options: result.data.map((item)=>{
+                        return {
+                            value: item._id,
+                            label:item.name
+                        }
+                    })
+                })
+            }else{
+
+            }
+        }else{
+            message.error(result.msg);
+        }
+    }
+
+    //请求所有一级分类数据
+    componentDidMount() {
+        this.getCategories('0');
+    }
+
     render (){
-
-        const options = [{
-            value: 'zhejiang',
-            label: 'Zhejiang',
-            children: [{
-                value: 'hangzhou',
-                label: 'Hangzhou',
-            }],
-        }, {
-            value: 'jiangsu',
-            label: 'Jiangsu',
-            disabled: true,
-            children: [{
-                value: 'nanjing',
-                label: 'Nanjing',
-            }],
-        }];
-
+        const {options} = this.state;
         return (
           <Card
               title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>添加商品</span></div>}
