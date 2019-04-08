@@ -7,13 +7,14 @@ import { reqGetCategories } from '../../api';
 import './save-update.less';
 const  Item = Form.Item;
 
-
-export default  class  SaveUpdate  extends Component{
+@Form.create()
+class  SaveUpdate  extends Component{
     constructor(props) {
         super(props);
         this.state={
             options:[],  //级联列表的数据
         }
+        this.richTextEditor = React.createRef();
     }
 
     //点击箭头 退出添加品类  回退到上一级路由
@@ -27,8 +28,15 @@ export default  class  SaveUpdate  extends Component{
     }
 
     //提交表单
-    submit = ()=>{
-
+    submit = (e)=>{
+        e.preventDefault();
+        const { validateFields } = this.props.form;
+        validateFields((err, values) => {
+            if (!err) {
+                console.log( values);
+                console.log(this.richTextEditor.current.state.editorState.toHTML());
+            }
+        });
     }
     //form表单的宽度
     formItemLayout = {
@@ -124,6 +132,7 @@ export default  class  SaveUpdate  extends Component{
 
     render (){
         const {options} = this.state;
+        const { getFieldDecorator } = this.props.form;
         return (
           <Card
               title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>添加商品</span></div>}
@@ -131,10 +140,19 @@ export default  class  SaveUpdate  extends Component{
           >
               <Form {...this.formItemLayout} onClick={this.submit}>
                   <Item  label="商品名称">
-                          <Input placeholder="请输入商品名称" />
+                      {/*第一次调用,第一个参数要和文档中的请求参数一致,whiteSpace:true  允许有空格*/}
+                      {getFieldDecorator('name', {
+                          rules: [{ required: true,whiteSpace:true, message: '商品名称不能为空!' }],
+                      })(
+                         <Input placeholder="请输入商品名称" />
+                      )}
                   </Item>
                   <Item   label="商品描述">
-                          <Input placeholder="请输入商品描述" />
+                      {getFieldDecorator('desc', {
+                          rules: [{ required: true,whiteSpace:true, message: '商品名称不能为空!' }],
+                      })(
+                         <Input placeholder="请输入商品描述" />
+                      )}
                   </Item>
                   <Item
                       label="选择分类"
@@ -143,13 +161,17 @@ export default  class  SaveUpdate  extends Component{
                           sm:{span: 5},
                       }}
                   >
-                      <Cascader
-                          options={options}
-                          onChange={this.onChange}
-                          placeholder="请选择分类"
-                          loadData={this.loadData}    //加载数据
-                          changeOnSelect       //当此项为 true 时，点选每级菜单选项值都会发生变化
-                      />
+                      {getFieldDecorator('category', {
+                          rules: [{ required: true, message: '请选择商品分类!' }],
+                      })(
+                            <Cascader
+                              options={options}
+                              onChange={this.onChange}
+                              placeholder="请选择分类"
+                              loadData={this.loadData}    //加载数据
+                              changeOnSelect       //当此项为 true 时，点选每级菜单选项值都会发生变化
+                            />
+                      )}
                   </Item>
                   <Item
                       label="商品价格"
@@ -158,14 +180,18 @@ export default  class  SaveUpdate  extends Component{
                           sm:{span: 5},
                       }}
                   >
-                      <InputNumber
-                          className="save-update-input-number"
-                          // 每3位数字就有一个，并且开头￥
-                          formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                          // 去除非数字的内容   特殊字符不需要咋转义
-                          parser={value => value.replace(/￥\s?|(,*)/g, '')}
-                          // onChange={this.onChange}
-                      />
+                      {getFieldDecorator('price', {
+                          rules: [{ required: true, message: '请输入商品价格!' }],
+                      })(
+                          <InputNumber
+                              className="save-update-input-number"
+                              // 每3位数字就有一个，并且开头￥
+                              formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              // 去除非数字的内容   特殊字符不需要咋转义
+                              parser={value => value.replace(/￥\s?|(,*)/g, '')}
+                              // onChange={this.onChange}
+                          />
+                      )}
                   </Item>
                   <Item
                       label="商品详情"
@@ -174,7 +200,10 @@ export default  class  SaveUpdate  extends Component{
                           sm:{span: 22},
                       }}
                   >
-                      <RichTextEditor />
+                      {/* 1.RichTextEditor不是antd的原生组件,所以不能用getFieldDecorator来校验
+                          2.父组件获取子组件的内容   可以用ref
+                      */}
+                      <RichTextEditor ref={this.richTextEditor}/>
                   </Item>
                   <Item >
                       <Button type="primary"  className="save-update-button" onClick={this.check} htmlType="submit">
@@ -186,3 +215,4 @@ export default  class  SaveUpdate  extends Component{
       )
     }
 }
+export default  SaveUpdate;

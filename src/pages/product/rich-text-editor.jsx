@@ -39,7 +39,7 @@ export default class RichTextEditor extends React.Component {
                 <BraftEditor
                     value={editorState}
                     onChange={this.handleEditorChange}
-                    onSave={this.submitContent}
+                    /*onSave={this.submitContent} 保存方法已经不需要*/
                 />
             </div>
         )
