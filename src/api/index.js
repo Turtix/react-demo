@@ -48,3 +48,6 @@ export const reqGetProducts = (pageNum,pageSize)=>ajax(prefix+ '/manage/product/
 
 //请求添加商品数据的函数
 export const reqAddProduct = product => ajax(prefix + '/manage/product/add', product, 'POST');
+
+//请求删除图片的函数
+export const reqDelImage = (name,id) => ajax(prefix + 'manage/img/delete', {name,id}, 'POST');

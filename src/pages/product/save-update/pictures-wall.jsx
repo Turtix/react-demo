@@ -1,10 +1,11 @@
 import React,{Component} from "react";
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal,message } from 'antd';
 import PropsTypes from 'prop-types';
+import {reqDelImage} from "../../../api";
 export default  class  PicturesWall   extends Component{
     static propTypes = {
-        _id: PropsTypes.string.isRequired,
-        imgs: PropsTypes.array.isRequired
+        _id: PropsTypes.string.isRequired,   //商品id
+        imgs: PropsTypes.array.isRequired    //图片信息
     }
 
     constructor(props) {
@@ -14,9 +15,10 @@ export default  class  PicturesWall   extends Component{
             previewImage: '',
             fileList: this.props.imgs.map((img,index)=>{
                 return {
-                    uid: -index,
-                    name: img,
-                    status: 'done',    //upload加载图片状态
+                    uid: -index,        // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
+                    name: img,          // 文件名
+                    status: 'done',    //upload加载图片状态  // 状态有：uploading done error removed
+                    response: '{"status": "success"}',          // 服务端响应内容
                     url: 'http://localhost:5000/update'+img,  //图片路径
                 }
             }) ,
@@ -35,7 +37,35 @@ export default  class  PicturesWall   extends Component{
     }
 
     //变化  上传/删除
-    handleChange = ({ fileList }) => this.setState({ fileList })
+    handleChange = async ({ file,fileList }) => {
+        console.log(file)
+        console.log(1111111111111)
+        console.log(fileList)
+        if(file.status === 'done'){
+            //图片上传完成   修改图片name
+            //找到上传的图片   也就是最后一张图片
+            const lastFile = fileList[fileList.length-1];
+            lastFile.name = file.response.data.name;
+            lastFile.url = file.response.data.url;
+
+        }else if(file.status === 'removed'){
+            //删除图片
+            const { name } = file;
+            const {_id} = this.props;
+
+            //发送请求  删除图片
+            const result = await  reqDelImage(name,_id);
+            if(result.status === 0){
+                message.success('删除图片成功~')
+            }else {
+                message.error(result.msg);
+            }
+        }else if(file.status === 'error'){
+            //图片上传失败
+            message.error('图片上传失败')
+        }
+        this.setState({ fileList })
+    }
 
     render (){
         const { previewVisible, previewImage, fileList } = this.state;

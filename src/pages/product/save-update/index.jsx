@@ -126,6 +126,21 @@ class  SaveUpdate  extends Component{
     //请求所有一级分类数据
     componentDidMount() {
         this.getCategories('0');
+        const { state } = this.props.location;
+        //state有值说明是修改商品.
+        if(state){
+            const { pCategoryId,categoryId } = state;
+            if(pCategoryId === '0'){
+                //得到的是一级分类数据
+                this.category=[categoryId];
+            }else{
+                //得到的是二级分类数据
+                //请求二级分类数据
+                this.getCategories(pCategoryId);
+                this.category=[pCategoryId , categoryId];
+            }
+        }
+
     }
 
     //加载二级分类数据
@@ -149,19 +164,6 @@ class  SaveUpdate  extends Component{
             targetOption.isLeaf = true;*/
 
         }, 1000);
-    }
-
-    //获取分类数据的方法
-    composeCategory = (pCategoryId,categoryId)=>{
-        let category;   //获取的分类数据
-        if(pCategoryId === 0 ){
-            //得到的是一级分类数据
-            category=[categoryId];
-        }else{
-            //得到的是二级分类数据
-            category=[pCategoryId , categoryId];
-        }
-        return category;
     }
 
     render (){
@@ -202,14 +204,14 @@ class  SaveUpdate  extends Component{
                   >
                       {getFieldDecorator('category', {
                           rules: [{ required: true, message: '请选择商品分类!' }],
-                          initialValue: state ? this.composeCategory(state.pCategoryId,state.category) : [],
+                          initialValue: state ? this.category: [],
                       })(
                             <Cascader
                               options={options}
                               onChange={this.onChange}
                               placeholder="请选择分类"
                               loadData={this.loadData}    //加载数据
-                              changeOnSelect       //当此项为 true 时，点选每级菜单选项值都会发生变化
+                              changeOnSelect             //当此项为 true 时，点选每级菜单选项值都会发生变化
                             />
                       )}
                   </Item>
