@@ -2,13 +2,13 @@ import React,{Component} from "react";
 import { Card ,Icon, Form, Input, Button, Cascader,InputNumber,message} from 'antd';
 
 import RichTextEditor from './rich-text-editor';
-import { reqGetCategories } from '../../../api';
+import { reqGetCategories,reqAddProduct } from '../../../api';
 
-import './save-update.less';
+import './index.less';
 const  Item = Form.Item;
 
 @Form.create()
-class  SaveUpdate  extends Component{
+class  Index  extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -31,10 +31,31 @@ class  SaveUpdate  extends Component{
     submit = (e)=>{
         e.preventDefault();
         const { validateFields } = this.props.form;
-        validateFields((err, values) => {
+        validateFields(async (err, values) => {
             if (!err) {
-                console.log( values);
-                console.log(this.richTextEditor.current.state.editorState.toHTML());
+               /* console.log( values);
+                console.log(this.richTextEditor.current.state.editorState.toHTML());*/
+                const { name,desc,price,category,} = values;
+                const detail = this.richTextEditor.current.state.editorState.toHTML();
+                let pCategoryId, categoryId;
+                if(category.length === 1){
+                    //说明只有一级分类
+                    pCategoryId = '0';
+                    categoryId = category[0];
+                }else{
+                    //说明有两级分类
+                    pCategoryId = category[0];
+                    categoryId = category[1];
+                }
+                //发送添加商品的请求
+                const result = await reqAddProduct({categoryId,pCategoryId,name,price,desc,detail});
+                if(result.status === 0){
+                    message.success('添加商品数据成功~');
+                    //回退到上一层
+                    this.props.history.goBack();
+                }else {
+                    message.error(result.msg);
+                }
             }
         });
     }
@@ -215,4 +236,4 @@ class  SaveUpdate  extends Component{
       )
     }
 }
-export default  SaveUpdate;
+export default  Index;

@@ -1,7 +1,7 @@
 import React,{Component,Fragment} from "react";
 import { Link } from 'react-router-dom';
 
-import {Button, Card, Icon, Table, Select, Input, Modal} from "antd";
+import {Button, Card, Icon, Table, Select, Input} from "antd";
 
 import MyButton from '../../../components/my-button';
 import { reqGetProducts } from '../../../api';
@@ -67,7 +67,7 @@ export default  class  Index  extends Component{
             </div>,
         }];
     render (){
-        const { isShowAddProductModal,products,total } = this.state;
+        const { products,total } = this.state;
         return (
             <Card
                 className="category"

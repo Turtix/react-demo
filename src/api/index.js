@@ -46,5 +46,5 @@ export  const reqUpdateCategory = (categoryId,categoryName)=>{
 //请求获取产品分页列表函数
 export const reqGetProducts = (pageNum,pageSize)=>ajax(prefix+ '/manage/product/list',{pageNum,pageSize});
 
-//请求创建商品的函数
-export const reqCreateProduct = product => ajax(prefix + '/manage/product/create', product, 'POST');
+//请求添加商品数据的函数
+export const reqAddProduct = product => ajax(prefix + '/manage/product/add', product, 'POST');
