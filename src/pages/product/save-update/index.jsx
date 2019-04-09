@@ -8,7 +8,7 @@ import './index.less';
 const  Item = Form.Item;
 
 @Form.create()
-class  Index  extends Component{
+class  SaveUpdate  extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -150,13 +150,27 @@ class  Index  extends Component{
         }, 1000);
     }
 
+    //获取分类数据的方法
+    composeCategory = (pCategoryId,categoryId)=>{
+        let category;   //获取的分类数据
+        if(pCategoryId === 0 ){
+            //得到的是一级分类数据
+            category=[categoryId];
+        }else{
+            //得到的是二级分类数据
+            category=[pCategoryId , categoryId];
+        }
+        return category;
+    }
 
     render (){
         const {options} = this.state;
-        const { getFieldDecorator } = this.props.form;
+        const { form:{ getFieldDecorator },location:{ state } } = this.props;
+        // console.log(state)
+
         return (
           <Card
-              title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>添加商品</span></div>}
+              title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>{ state?'修改商品':'添加商品'}</span></div>}
               style={{ width: '100%' }}
           >
               <Form {...this.formItemLayout} onClick={this.submit}>
@@ -164,6 +178,7 @@ class  Index  extends Component{
                       {/*第一次调用,第一个参数要和文档中的请求参数一致,whiteSpace:true  允许有空格*/}
                       {getFieldDecorator('name', {
                           rules: [{ required: true,whiteSpace:true, message: '商品名称不能为空!' }],
+                          initialValue: state?state.name:'',
                       })(
                          <Input placeholder="请输入商品名称" />
                       )}
@@ -171,6 +186,7 @@ class  Index  extends Component{
                   <Item   label="商品描述">
                       {getFieldDecorator('desc', {
                           rules: [{ required: true,whiteSpace:true, message: '商品名称不能为空!' }],
+                          initialValue: state?state.desc:'',
                       })(
                          <Input placeholder="请输入商品描述" />
                       )}
@@ -184,6 +200,7 @@ class  Index  extends Component{
                   >
                       {getFieldDecorator('category', {
                           rules: [{ required: true, message: '请选择商品分类!' }],
+                          initialValue: state ? this.composeCategory(state.pCategoryId,state.category) : [],
                       })(
                             <Cascader
                               options={options}
@@ -203,6 +220,7 @@ class  Index  extends Component{
                   >
                       {getFieldDecorator('price', {
                           rules: [{ required: true, message: '请输入商品价格!' }],
+                          initialValue: state?state.price:'',
                       })(
                           <InputNumber
                               className="save-update-input-number"
@@ -223,8 +241,10 @@ class  Index  extends Component{
                   >
                       {/* 1.RichTextEditor不是antd的原生组件,所以不能用getFieldDecorator来校验
                           2.父组件获取子组件的内容   可以用ref
+                          3.通过props将detail的值传递给富文本框组件
                       */}
-                      <RichTextEditor ref={this.richTextEditor}/>
+
+                      <RichTextEditor ref={this.richTextEditor}  detail={state ? state.detail : ''}/>
                   </Item>
                   <Item >
                       <Button type="primary"  className="save-update-button" onClick={this.check} htmlType="submit">
@@ -236,4 +256,4 @@ class  Index  extends Component{
       )
     }
 }
-export default  Index;
+export default  SaveUpdate;

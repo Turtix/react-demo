@@ -21,12 +21,21 @@ export default  class  Index  extends Component{
     //获取产品数据   pageSize默认每页显示三条数据.
     getProducts =async (pageNum,pageSize = 3)=>{
         const result =await reqGetProducts(pageNum,pageSize );
-        console.log(result);
+        // console.log(result);
         this.setState({
             products: result.data.list,
             total:  result.data.total,
         })
     }
+
+    //修改产品数据
+    updateProduct = (product)=>{
+        return ()=>{
+            //路由组件都可以使用history属性.  push方法可以携带一个参数product并将它传递到saveupdate页面.
+            this.props.history.push('/product/saveupdate',product);
+        }
+    }
+
     //页面加载后展示第一页数据
     componentDidMount() {
         this.getProducts(1);
@@ -60,10 +69,10 @@ export default  class  Index  extends Component{
         {
             title: '操作',
             className: 'operator',
-            dataIndex: 'operator',
+            // dataIndex: 'operator',    //如果有dataIndex,render方法的参数就不能起作用.
             render: product => <div>
                 <MyButton>详情</MyButton>
-                <MyButton>修改</MyButton>
+                <MyButton onClick={this.updateProduct(product)}>修改</MyButton>
             </div>,
         }];
     render (){
