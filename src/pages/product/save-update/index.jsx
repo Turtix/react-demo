@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import { Card ,Icon, Form, Input, Button, Cascader,InputNumber,message} from 'antd';
 
 import RichTextEditor from './rich-text-editor';
-import { reqGetCategories,reqAddProduct } from '../../../api';
+import { reqGetCategories,reqAddProduct,reqUpdateProduct } from '../../../api';
 import PicturesWall from './pictures-wall';
 
 import './index.less';
@@ -48,10 +48,25 @@ class  SaveUpdate  extends Component{
                     pCategoryId = category[0];
                     categoryId = category[1];
                 }
-                //发送添加商品的请求
-                const result = await reqAddProduct({categoryId,pCategoryId,name,price,desc,detail});
+
+                //判断是添加商品数据  还是修改商品数据
+                const { location:{ state }, } = this.props;
+                // console.log(_id)
+                let result = null;
+                let msg = '';
+                if(state){
+                    //修改商品数据id
+                    //发送添加商品的请求
+                    const {_id} = state;
+                    result = await reqUpdateProduct({categoryId,pCategoryId,name,price,desc,detail,_id});
+                    msg='修改商品数据成功~';
+                }else{
+                    //发送添加商品的请求
+                    result = await reqAddProduct({categoryId,pCategoryId,name,price,desc,detail});
+                    msg='添加商品数据成功~';
+                }
                 if(result.status === 0){
-                    message.success('添加商品数据成功~');
+                    message.success(msg);
                     //回退到上一层
                     this.props.history.goBack();
                 }else {
@@ -170,8 +185,6 @@ class  SaveUpdate  extends Component{
         const {options} = this.state;
         //state是history.push()的第二个参数.
         const { form:{ getFieldDecorator },location:{ state } } = this.props;
-        // console.log(state)
-
         return (
           <Card
               title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>{ state?'修改商品':'添加商品'}</span></div>}

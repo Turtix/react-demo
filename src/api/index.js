@@ -50,4 +50,10 @@ export const reqGetProducts = (pageNum,pageSize)=>ajax(prefix+ '/manage/product/
 export const reqAddProduct = product => ajax(prefix + '/manage/product/add', product, 'POST');
 
 //请求删除图片的函数
-export const reqDelImage = (name,id) => ajax(prefix + 'manage/img/delete', {name,id}, 'POST');
+export const reqDelImage = (name,id) => ajax(prefix + '/manage/img/delete', {name,id}, 'POST');
+
+//请求更新品类名称函数
+export  const reqUpdateProduct = product =>{
+    return ajax(prefix+ '/manage/product/update',product,'POST');
+}
+
