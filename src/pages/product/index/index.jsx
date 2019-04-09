@@ -82,9 +82,10 @@ export default  class  Index  extends Component{
                 className="category"
                 title={
                     <Fragment>
-                        <Select value={0}>
-                            <Option key={0} value={0}>根据商品名称</Option>
-                            <Option key={1} value={1}>根据商品描述</Option>
+                        {/* 默认值: defaultValue  通过受控组件传递数据*/}
+                        <Select defaultValue='productName' onChange={this.handleSelect}>
+                            <Option key={0} value='productName'>根据商品名称</Option>
+                            <Option key={1} value='productDesc'>根据商品描述</Option>
                         </Select>
                         <Input placeholder="关键字" className="search-input" />
                         <Button type="primary" >搜索</Button>
