@@ -7,7 +7,7 @@ import memory from '../../utils/memory-utils';
 import LeftNav from '../../components/left-nav/left-nav.jsx';
 import Home from '../home';
 import Category from '../category';
-import Products from '../product/products';
+import Product from '../product';
 import HeaderMain from '../../components/header-main';
 import User from '../user';
 import Role from '../role';
@@ -70,7 +70,7 @@ export default  class  Admin  extends Component{
                             <Switch>
                                 <Route path="/home" component={Home}/>
                                 <Route path="/category" component={Category}/>
-                                <Route path="/product" component={Products}/>
+                                <Route path="/product" component={Product}/>
                                 <Route path="/user" component={User}/>
                                 <Route path="/role" component={Role}/>
                                 <Route path="/charts/line" component={Line}/>

@@ -70,4 +70,4 @@ const Option = Select.Option;
       )
     }
 }
-export default  AddCategoryForm
+export default  AddCategoryForm;

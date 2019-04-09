@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import { Card ,Icon, Form, Input, Button, Cascader,InputNumber,message} from 'antd';
 
 import RichTextEditor from './rich-text-editor';
-import { reqGetCategories } from '../../api';
+import { reqGetCategories } from '../../../api';
 
 import './save-update.less';
 const  Item = Form.Item;
