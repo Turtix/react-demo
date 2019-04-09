@@ -1,31 +1,55 @@
 import React,{Component,Fragment} from "react";
 import { Link } from 'react-router-dom';
 
-import {Button, Card, Icon, Table, Select, Input} from "antd";
+import {Button, Card, Icon, Table, Select, Input,message} from "antd";
 
 import MyButton from '../../../components/my-button';
-import { reqGetProducts } from '../../../api';
+import { reqGetProducts,reqSearch} from '../../../api';
 
 import './index.less';
 
 const Option = Select.Option;
 
-export default  class  Index  extends Component{
+export default  class  Product   extends Component{
     constructor(props){
         super(props);
         this.state = {
             products:[],   //单页产品数据
             total: 0,      //产品数据总数
+            searchType: 'productName', //根据搜索的类型
+            searchContent: '',         //根据搜索的内容
+            pageNum: 1,               //当前页码
+            pageSize: 3,             //每页显示条数
         }
+        this.searchContentInput = React.createRef();
     }
     //获取产品数据   pageSize默认每页显示三条数据.
     getProducts =async (pageNum,pageSize = 3)=>{
-        const result =await reqGetProducts(pageNum,pageSize );
-        // console.log(result);
-        this.setState({
-            products: result.data.list,
-            total:  result.data.total,
-        })
+        //获取数据
+        const { searchType} = this.state;
+        const searchContent = this.searchContent
+        let result=null;
+        if(searchContent){
+            //根据搜索条件搜索数据
+            result =await reqSearch({
+                [searchType]: searchContent,
+                pageNum,
+                pageSize
+            });
+        }else{
+            result =await reqGetProducts(pageNum,pageSize );
+        }
+        if(result.status === 0){
+            this.setState({
+                products: result.data.list,
+                total:  result.data.total,
+                pageNum: pageNum,
+                pageSize: pageSize
+            })
+        }else{
+            message.error(result.msg);
+        }
+
     }
 
     //修改产品数据
@@ -38,6 +62,23 @@ export default  class  Index  extends Component{
 
     //页面加载后展示第一页数据
     componentDidMount() {
+        this.getProducts(1);
+    }
+    //select选择框没有e.target  获取选择框的值
+    handleSelect = (value)=>{
+        this.setState({
+            searchType: value
+        })
+    }
+    //获取输入框的值
+    handleChange = (e)=>{
+        this.setState({
+            searchContent: e.target.value
+        })
+    }
+    //点击搜索
+    search = ()=>{
+        this.searchContent = this.searchContentInput.current.state.value;
         this.getProducts(1);
     }
     //为了可复用
@@ -76,7 +117,7 @@ export default  class  Index  extends Component{
             </div>,
         }];
     render (){
-        const { products,total } = this.state;
+        const { products,total,searchType, searchContent} = this.state;
         return (
             <Card
                 className="category"
@@ -87,8 +128,8 @@ export default  class  Index  extends Component{
                             <Option key={0} value='productName'>根据商品名称</Option>
                             <Option key={1} value='productDesc'>根据商品描述</Option>
                         </Select>
-                        <Input placeholder="关键字" className="search-input" />
-                        <Button type="primary" >搜索</Button>
+                        <Input placeholder="关键字" className="search-input"  ref={this.searchContentInput}/>
+                        <Button type="primary" onClick={this.search}>搜索</Button>
                     </Fragment>
                 }
                 extra={<Link to="/product/saveupdate"><Button type="primary" ><Icon type="plus" />添加品类</Button></Link>}

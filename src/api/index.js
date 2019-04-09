@@ -56,6 +56,6 @@ export const reqDelImage = (name,id) => ajax(prefix + '/manage/img/delete', {nam
 export  const reqUpdateProduct = product => ajax(prefix+ '/manage/product/update',product,'POST');
 
 //请求更新品类名称函数
-/*export  const reqSearch = product => ajax(prefix+ '/manage/product/update',product,'POST');*/
+export  const reqSearch = data => ajax(prefix+ '/manage/product/search',data);
 
 
