@@ -1,7 +1,8 @@
 import React from 'react'
 import PropsTypes from 'prop-types';
 // 引入编辑器组件
-import BraftEditor from 'braft-editor'
+import BraftEditor from 'braft-editor';
+
 // 引入编辑器样式
 import 'braft-editor/dist/index.css'
 
@@ -15,9 +16,8 @@ export default class RichTextEditor extends React.Component {
             // 如果是添加商品:创建一个空的editorState作为初始值  如果修改商品:将商品详情展示出来.
             editorState: BraftEditor.createEditorState(this.props.detail)
         }
-
     }
-    
+
     //修改
     componentDidMount () {
         //如果富文本框detail原来没有值,就给它设置一个初始值.
@@ -45,7 +45,6 @@ export default class RichTextEditor extends React.Component {
     }
 
     render () {
-
         const { editorState } = this.state;
         return (
             <div className="my-component" style={{border: '1px solid #d9d9d9', height: 300, borderRadius: 4}}>

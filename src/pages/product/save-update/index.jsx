@@ -3,6 +3,7 @@ import { Card ,Icon, Form, Input, Button, Cascader,InputNumber,message} from 'an
 
 import RichTextEditor from './rich-text-editor';
 import { reqGetCategories,reqAddProduct } from '../../../api';
+import PicturesWall from './pictures-wall';
 
 import './index.less';
 const  Item = Form.Item;
@@ -165,6 +166,7 @@ class  SaveUpdate  extends Component{
 
     render (){
         const {options} = this.state;
+        //state是history.push()的第二个参数.
         const { form:{ getFieldDecorator },location:{ state } } = this.props;
         // console.log(state)
 
@@ -173,7 +175,7 @@ class  SaveUpdate  extends Component{
               title={<div className="save-update-title" onClick={this.goBack}><Icon type="arrow-left" className="save-update-icon" />&nbsp;&nbsp;<span>{ state?'修改商品':'添加商品'}</span></div>}
               style={{ width: '100%' }}
           >
-              <Form {...this.formItemLayout} onClick={this.submit}>
+              <Form {...this.formItemLayout} onSubmit={this.submit}>
                   <Item  label="商品名称">
                       {/*第一次调用,第一个参数要和文档中的请求参数一致,whiteSpace:true  允许有空格*/}
                       {getFieldDecorator('name', {
@@ -232,6 +234,11 @@ class  SaveUpdate  extends Component{
                           />
                       )}
                   </Item>
+                  {
+                      state ?<Item label="商品图片">
+                          <PicturesWall  _id={state._id} imgs={state.imgs}/>
+                      </Item> :null
+                  }
                   <Item
                       label="商品详情"
                       wrapperCol={{
@@ -247,7 +254,7 @@ class  SaveUpdate  extends Component{
                       <RichTextEditor ref={this.richTextEditor}  detail={state ? state.detail : ''}/>
                   </Item>
                   <Item >
-                      <Button type="primary"  className="save-update-button" onClick={this.check} htmlType="submit">
+                      <Button type="primary"  className="save-update-button"  htmlType="submit">
                           提交
                       </Button>
                   </Item>
