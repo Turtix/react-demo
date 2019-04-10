@@ -80,7 +80,11 @@ const Item = Menu.Item;
     }
     render (){
         //获取当前路径
-      const {location:{pathname},opacity} = this.props;
+      let {location:{ pathname },opacity} = this.props;
+      console.log(pathname)
+      if(pathname.startsWith('/product')){
+          pathname = '/product';
+      }
       return (
           <Fragment>
               <Link to="/home" className="logo" onClick={this.handleClick}>
