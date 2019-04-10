@@ -53,7 +53,7 @@ const Item = Menu.Item;
                 >
                     {
                         children.map((item)=>{
-                            if(pathname === item.key){
+                            if(pathname.startsWith(item.key)){
                                 openKeys.push(menu.key);
                             }
                            return this.createItem(item);
